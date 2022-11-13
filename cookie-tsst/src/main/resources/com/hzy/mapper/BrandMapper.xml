@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    namespace:名称空间
+-->
+
+<mapper namespace="com.hzy.mapper.BrandMapper">
+    <resultMap id="brandResultMap" type="brand">
+        <result column="brand_name" property="brandName"/>
+        <result column="company_name" property="companyName"/>
+    </resultMap>
+    <!--<select id="selectAll" resultType="com.hzy.pojo.User">-->
+    <!--取了别名后就不需要加包名，也不分大小写-->
+
+</mapper>
