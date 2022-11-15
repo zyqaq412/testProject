@@ -15,7 +15,7 @@
   <title>修改</title>
 </head>
 <body>
-<form action="/cookie-tsst/ModifyServlet">
+<form action="${pageContext.request.contextPath}/ModifyServlet">
   <%--id &nbsp;&nbsp;   <input type="text" name="id" value="${brand.id}" disabled="true"><br>--%>
   <%--不能用disabled="true" 虽然文本框不能编辑了但是 数据也参与表单提交了--%>
   id &nbsp;&nbsp;   <input type="text" name="id" value="${brand.id}" readonly="true"><br>

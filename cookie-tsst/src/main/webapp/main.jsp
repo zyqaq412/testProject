@@ -15,7 +15,7 @@
   <title>企业列表</title>
 </head>
 <body>
-<a href="/cookie-tsst/add.html">添加</a><br>
+<a href="${pageContext.request.contextPath}/add.jsp">添加</a><br>
 <h5>${user.username} 欢迎你！ </h5>
       <table>
         <tr>
@@ -40,8 +40,9 @@
           <c:if test="${brand.status==0}">
             <td>禁用</td>
           </c:if>
-          <td><a href="/cookie-tsst/IsModifyServlet?id=${brand.id}">修改</a>
-            <a href="/cookie-tsst/DelServlet?id=${brand.id}">删除</a></td>
+          <td>
+            <a href="${pageContext.request.contextPath}/SelectByIdServlet?id=${brand.id}">修改</a>
+            <a href="${pageContext.request.contextPath}/DelServlet?id=${brand.id}">删除</a></td>
           <br>
 
         </tr>

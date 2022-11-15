@@ -15,6 +15,8 @@ import java.util.List;
 public class SelectAllServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");//设置响应字符编码
         BrandService bs = new BrandService();
         List<Brand> brands = bs.selectAll();
         request.setAttribute("brands",brands);

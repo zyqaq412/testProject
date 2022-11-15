@@ -20,9 +20,9 @@
 <div class="form-div">
   <div class="reg-content">
     <h1>欢迎注册</h1>
-    <span>已有帐号？</span> <a href="/cookie-tsst/login.html">登录</a>
+    <span>已有帐号？</span> <a href="${pageContext.request.contextPath}/login.jsp">登录</a>
   </div>
-  <form id="reg-form" action="/cookie-tsst/register" method="post">
+  <form id="reg-form" action="${pageContext.request.contextPath}/register" method="post">
 
     <table>
 
@@ -50,7 +50,7 @@
         <td>验证码</td>
         <td class="inputs">
           <input name="checkCode" type="text" id="checkCode">
-          <img id="checkCodeImg" src="/cookie-tsst/checkCodeServlet">
+          <img id="checkCodeImg" src="${pageContext.request.contextPath}/checkCodeServlet">
           <a href="#" id="changeImg" >看不清？</a>
         </td>
       </tr>
@@ -67,7 +67,7 @@
 
 <script>
   document.getElementById("changeImg").onclick = function () {
-    document.getElementById("checkCodeImg").src = "/cookie-tsst/checkCodeServlet?"+new Date().getMilliseconds();
+    document.getElementById("checkCodeImg").src = "${pageContext.request.contextPath}/checkCodeServlet?"+new Date().getMilliseconds();
   }
 
 </script>

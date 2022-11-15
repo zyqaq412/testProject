@@ -20,8 +20,12 @@ import java.io.IOException;
 public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = UTIL.luanMa(request.getParameter("username"));
-        String password = UTIL.luanMa(request.getParameter("password"));
+        request.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");//设置响应字符编码
+        String contextPath = request.getContextPath();
+
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
 
         //获取用户输入验证码
         String checkCode = request.getParameter("checkCode");
@@ -30,7 +34,7 @@ public class RegisterServlet extends HttpServlet {
         String checkCodeGen = (String) session.getAttribute("checkCodeGen");
 
         if (!checkCodeGen.equals(checkCode)){
-            response.sendRedirect("/cookie-tsst/register.jsp");
+            response.sendRedirect(contextPath+"/register.jsp");
         }else {
             UserService userService = new UserService();
             User user = userService.selectByUsername(username);
@@ -39,9 +43,9 @@ public class RegisterServlet extends HttpServlet {
                 user.setUsername(username);
                 user.setPassword(password);
                 userService.add(user);
-                response.sendRedirect("/cookie-tsst");
+                response.sendRedirect(contextPath);
             }else {
-                response.sendRedirect("/cookie-tsst/register.jsp");
+                response.sendRedirect(contextPath+"/register.jsp");
             }
         }
 

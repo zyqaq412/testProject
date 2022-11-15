@@ -13,9 +13,10 @@ import java.io.IOException;
 public class DelServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String contextPath = request.getContextPath();
         int id = Integer.parseInt(request.getParameter("id"));
         new BrandService().delBrand(id);
-        response.sendRedirect("/cookie-tsst/SelectAllServlet");
+        response.sendRedirect(contextPath+"/SelectAllServlet");
     }
 
     @Override

@@ -21,6 +21,7 @@ public class LonginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");//设置响应字符编码
         //获取复选框数据
         String remember =request.getParameter("remember");
 
