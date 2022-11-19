@@ -1,8 +1,0 @@
-com\hzy\pojo\PageBean.class
-com\hzy\servlet\BrandServlet.class
-com\hzy\mapper\BrandMapper.class
-com\hzy\servlet\BaseServlet.class
-com\hzy\util\SqlSessionFactoryUtil.class
-com\hzy\service\impl\BrandServiceImpl.class
-com\hzy\service\BrandService.class
-com\hzy\pojo\Brand.class
