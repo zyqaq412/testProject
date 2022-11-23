@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>login</title>
+  <link href="../css/login.css" rel="stylesheet">
+  <!-- 引入组件库 -->
+  <script src="../js/vue.js"></script>
+  <script src="../plugins/elementui/index.js"></script>
+  <script type="text/javascript" src="../js/jquery.min.js"></script>
+  <script src="../js/axios-0.18.0.js"></script>
+  <script src="../plugins/element-ui/lib/index.js"></script>
+  <link rel="stylesheet" href="../plugins/element-ui/lib/theme-chalk/index.css">
+</head>
+
+<body>
+
+<div id="app">
+  <form id="form">
+    <h1 id="loginMsg">登录</h1>
+    <p>账号:<input id="username" v-model="user.username"  type="text"/></p>
+    <p>密码:<input  id="password"  v-model="user.password" type="password" /></p><br>
+    <template>
+      <el-radio v-model="user.level" label="0">学生</el-radio>
+      <el-radio v-model="user.level" label="1">老师</el-radio>
+      <el-radio v-model="user.level" label="2">管理员</el-radio>
+    </template>
+    <input type="button" value="登录" @click="login" class="button"/>
+  </form>
+
+</div>
+
+</body>
+
+
+<script>
+  new Vue({
+    el:'#app',
+    data:{
+      user:{
+        username:'',
+        password:'',
+        level:''
+      },
+       teacher: {
+         tid: '',
+         tname: '',
+         password: '',
+         bid: '',
+         level:''
+       },
+      student:{
+        sid: '',
+        name: '',
+        password:'',
+        bid: '',
+        phone: '',
+        level: '',
+        status:''
+      },
+
+    },
+    methods:{
+      login(){
+        axios({
+          method:"post",
+          url:"../login",
+          data: this.user
+        }).then(resp =>{
+          if (resp.data.code == 20051){
+            this.$message.success("登录成功");
+            if (resp.data.data.level==0){
+              window.location.href="list.html";
+            }else {
+              window.location.href="admin.html";
+            }
+          }else if (resp.data.code == 20050){
+            this.$message.error("登录失败");
+          }else {
+            this.$message.error(resp.data.data.msg);
+          }
+
+        })
+      }
+    }
+  })
+</script>
+</html>

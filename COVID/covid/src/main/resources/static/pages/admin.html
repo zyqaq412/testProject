@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理界面</title>
+    <!-- 引入组件库 -->
+    <script src="../js/vue.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <script src="../element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app" >
+
+
+    <span>
+        <el-col :span="4">
+        <h5>菜单 </h5>
+        <el-menu
+                default-active="2"
+                class="el-menu-vertical-demo"
+                @open="handleOpen"
+                @close="handleClose">
+                <el-menu-item-group>
+                    <template slot="title">功能</template>
+                    <el-menu-item index="1-1" @click="on1">我的班级 </parent></el-menu-item>
+                    <el-menu-item index="1-2" @click="on2">申请管理</el-menu-item>
+                    <el-menu-item index="1-3">选项3</el-menu-item>
+                </el-menu-item-group>
+        </el-menu>
+    </el-col>
+    </span>
+    <span><parent v-show="flag1"/></span>
+    <span><parent2 v-show="flag2"/></span>
+</div>
+</body>
+<script>
+    /*班级*/
+    var parent = {
+        template:
+            `
+<el-table
+    :data="tableData"
+    style="width: 80%"
+    :row-class-name="tableRowClassName">
+    <el-table-column
+      prop="sid"
+      label="学生id"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="name"
+      label="学生姓名"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="bid"
+      label="班级"
+      width="180">
+    </el-table-column>
+    <el-table-column
+        prop="phone"
+        label="电话"
+        width="180">
+    </el-table-column>
+    <el-table-column
+        prop="status"
+        label="状态"
+        width="180">
+    </el-table-column>
+
+  </el-table>
+
+  <style>
+  .el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
+</style>
+`,
+        data(){
+            return{
+                tableData: [{
+                    sid:'1',
+                    name: '方便面',
+                    bid: '1',
+                    phone: '1235',
+                    status:'1'
+                }],
+            }
+        },
+        methods: {
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex === 1) {
+                    return 'warning-row';
+                } else if (rowIndex === 3) {
+                    return 'success-row';
+                }
+                return '';
+            },
+            selectAll(){
+                axios({
+                    method:"get",
+                    url:"../admins",
+                }).then(resp=>{
+                    if (resp.data.code==20041){
+                        this.tableData = resp.data.data
+                    }else if (resp.data.code==20040){
+                        this.$message.error("查询失败");
+                    }else {
+                        this.$message.error(resp.data.msg);
+                    }
+                })
+            },
+        },
+        mounted(){
+            this.selectAll()
+        }
+    }
+    /*申请历史*/
+    var parent2 = {
+        template:`
+          <el-table
+              :data="tableData"
+              style="width: 80%"
+              :row-class-name="tableRowClassName">
+          <el-table-column
+              prop="sid"
+              label="学生id"
+              width="180">
+          </el-table-column>
+          <el-table-column
+              prop="wid"
+              label="物品id"
+              width="180">
+          </el-table-column>
+          <el-table-column
+              prop="count"
+              label="申请数量">
+          </el-table-column>
+          <el-table-column
+              prop="bid"
+              label="班级">
+          </el-table-column>
+          <el-table-column
+              prop="wname"
+              label="物品名称">
+          </el-table-column>
+          <el-table-column
+              prop="status"
+              label="状态">
+          </el-table-column>
+  </el-table>
+  <style>
+  .el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
+</style>
+`,
+        data(){
+            return{
+                tableData: [{
+                    sid:'',//后端获取
+                    wid:'',
+                    count: '',
+                    bid:'',//后端获取
+                    wname: '',
+                    status:''
+                }]
+            }
+        },
+        methods:{
+            selectAll(){
+                axios({
+                    method:"get",
+                    url:"../admins/res",
+                }).then(resp=>{
+                    if (resp.data.code==20041){
+                        this.tableData = resp.data.data
+                    }else if (resp.data.code==20040){
+                        this.$message.error("查询失败");
+                    }else {
+                        this.$message.error(resp.data.msg);
+                    }
+                })
+            }
+        },
+        mounted(){
+            this.selectAll()
+            axios({
+                method:"get",
+                url:"../login",
+            }).then(resp=>{
+                this.nameDL = resp.data
+            })
+        },
+        update(){
+            this.selectAll()
+        }
+    }
+
+    new Vue({
+        el:'#app',
+        data:{
+            flag1:false,
+            flag2:false,
+            nameDL:''
+        },
+        components: {
+            parent,
+            parent2
+        },
+        methods: {
+            handleOpen(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            handleClose(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            on1(){
+                this.flag1 = true
+                this.flag2 = false
+                parent.methods.selectAll()
+            },
+            on2(){
+                this.flag2 = true
+                this.flag1 = false
+            }
+        },
+
+        mounted(){
+
+        }
+    })
+
+
+</script>
+</html>
