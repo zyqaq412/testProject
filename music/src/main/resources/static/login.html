@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>登录页面</title>
+	<link rel="stylesheet" href="css/conmmon.css">
+	<link rel="stylesheet" href="css/login.css">
+	<script src="js/vue.js"></script>
+	<script src="js/axios.js"></script>
+	<!-- 引入样式 -->
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<!-- 引入组件库 -->
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+<body>
+
+<div id="app" class="login-container">
+	<div class="login-dialog">
+		<h3>管理员登录</h3>
+		<div class="row">
+			<span>用户名:</span>
+			<input type="text" v-model="User.username" placeholder="输入用户名">
+		</div>
+		<div class="row">
+			<span>密码:</span>
+			<input type="password" v-model="User.password" placeholder="输入密码">
+		</div>
+		<div class="row">
+			<input type="button" id="submit1" value="登录" @click="login">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="button" id="submit2" value="注册" @click="toregister">
+		</div>
+	</div>
+</div>
+<script>
+	new Vue({
+		el:'#app',
+		data:{
+			User:{
+				username:'',
+				password:''
+			}
+		},
+		methods:{
+			toregister() {
+				window.location.href = "reg.html";
+			},
+			login(){
+				axios({
+					method:"post",
+					url:"/user/login",
+					data:this.User
+				}).then(resp=>{
+					if (resp.data.code == 20051){
+						this.$message.success("登录成功");
+						window.location.href = "list.html"
+					}else if(resp.data.code == 20050){
+						this.$message.error(resp.data.msg);
+					}else {
+						this.$message.error("系统繁忙");
+					}
+				})
+			}
+		}
+	})
+</script>
+</body>
+</html>

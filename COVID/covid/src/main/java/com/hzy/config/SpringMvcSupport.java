@@ -27,6 +27,8 @@ public class SpringMvcSupport implements WebMvcConfigurer {
                 .excludePathPatterns("/element-ui/**/**")
                 .excludePathPatterns("/js/**")
                 .excludePathPatterns("/pages/login.html")
-                .excludePathPatterns("/login");
+                .excludePathPatterns("/login")
+                .excludePathPatterns("/index.html");
     }
+
 }

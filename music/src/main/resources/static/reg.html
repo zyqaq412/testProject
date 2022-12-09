@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册页面</title>
+    <link rel="stylesheet" href="css/conmmon.css">
+    <link rel="stylesheet" href="css/login.css">
+    <script src="js/vue.js"></script>
+    <script src="js/axios.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+
+<body>
+<!-- 版心 -->
+<div id="app" class="login-container">
+    <!-- 中间的登陆框 -->
+    <div class="login-dialog">
+        <h3>注册</h3>
+        <div class="row">
+            <span>用户名:</span>
+            <input type="text" v-model="User.username" placeholder="请输入用户名">
+        </div>
+        <div class="row">
+            <span>密码:</span>
+            <input type="password" v-model="User.password" placeholder="请输入密码">
+        </div>
+        <div class="row">
+            <span>确认密码:</span>
+            <input type="password" v-model="isPwd" placeholder="请确认密码">
+        </div>
+        <div class="row">
+            <input type="button" @click="register" value="提交">
+        </div>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el:'#app',
+        data:{
+            User:{
+                username:'',
+                password:''
+            },
+            isPwd:''
+        },
+        methods:{
+            register(){
+                if(this.User.username==""){
+                    this.$message("抱歉：请先输入用户名！");
+                    return;
+                }
+                if(this.User.password==""){
+                    this.$message("抱歉：请先输入密码！");
+                    return;
+                }
+                if(this.isPwd==""){
+                    this.$message("抱歉：请先输入确认密码！");
+                    return;
+                }
+                if(this.User.password!=this.isPwd){
+                    this.$message("抱歉：两次输入的密码不一致，请检查！");
+                    return;
+                }
+                axios({
+                    method:"post",
+                    url:"/user",
+                    data:this.User
+                }).then(resp=>{
+                    if (resp.data.code == 20061){
+                        this.$message.success("注册成功");
+                    }else if(resp.data.code == 20060){
+                        this.$message.error(resp.data.msg);
+                    }else {
+                        this.$message.error("系统繁忙");
+                    }
+                })
+            }
+        }
+    })
+</script>
+</body>
+
+</html>
