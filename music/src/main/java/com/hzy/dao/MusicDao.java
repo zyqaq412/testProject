@@ -24,7 +24,8 @@ public interface MusicDao {
      * @param title
      * @return
      */
-    @Select("select * from music where title like #{title}")
+    //@Select("select * from music where title like ('%',#{title},'%')")
+    @Select("select * from music where title like concat('%',#{title},'%')")
     List<Music> selectByTitle(String title);
 
     /**

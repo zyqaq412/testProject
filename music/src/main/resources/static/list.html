@@ -55,7 +55,7 @@
         <form class="form-inline">
             <div class="form-group">
                 <label for="exampleInputName2">歌曲名</label>
-                <input name="name" type="text" class="form-control" id="exampleInputName2" >
+                <input v-model="selectMusicName" type="text" class="form-control" id="exampleInputName2" >
             </div>
             <button id="submit1" type="button" class="btn btn-primary" @click="selectMusic">查询</button>
         </form>
@@ -119,13 +119,18 @@
                 time:'',
                 url:'',
                 userid:''
-            }]
+            }],
+            selectMusicName:''
         },
         methods:{
           selectMusic(){
+              //console.log(this.selectMusicName);
               axios({
-                  method:"get",
+                  method:"post",
                   url:"/music/selectMusic",
+                  data: {
+                      title:this.selectMusicName
+                  }
               }).then(resp=>{
                   //console.log(resp.data.musicList);
                   //console.log(this.musicList);
@@ -142,6 +147,7 @@
                 SewisePlayer.toPlay(val,name,0,true);
             },
             deleteById(val){
+
                 axios({
                     method: "delete",
                     url:"/music/"+val

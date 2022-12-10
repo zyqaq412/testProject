@@ -129,19 +129,27 @@ public class MusicController {
      * 查询音乐
      * 没有参数就是查询全部
      * 有参数就根据参数模糊查询
-     * @param musicName
+     * @param
      * @return
      */
-    @GetMapping("/selectMusic")//(required=false)可以不传入参数
-    public Result findMusic(@RequestParam(required = false) String musicName){
+    @PostMapping ("/selectMusic")//(required=false)可以不传入参数
+    public Result findMusic(@RequestBody Music music){
+        String musicName = music.getTitle();
+        /*System.out.println(musicName);
+        System.out.println(musicName==null);
+        System.out.println(!("").equals(musicName));*/
         List<Music> musicList = null;
-        if(musicName != null){
+        //if(musicName != null){
+        if(!("").equals(musicName)){
             musicList = musicService.selectByTitle(musicName);
+            //System.out.println(musicList);
+            return new Result(Code.GET_OK,musicList,"查找成功");
         }else {
             musicList = musicService.selectAll();
+            return new Result(Code.GET_OK,musicList,"查询到了所有的音乐");
         }
 
-        return new Result(Code.GET_OK,musicList,"查询到了所有的音乐");
+
     }
     /**
      * 处理播放音乐的请求
