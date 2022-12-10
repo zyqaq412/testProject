@@ -84,7 +84,7 @@
                 <td>{{music.singer}}</td>
                 <td><button class="btn btn-primary" @click="playerSong(music.url)">播放歌曲</button></td>
                 <td><button class="btn btn-primary" @click="deleteById(music.id)">删除</button>
-                    <button class="btn btn-primary" @click="loveInfo(music.id)">喜欢</button>
+                    <button class="btn btn-primary" @click="loveMusic(music.id)">喜欢</button>
                 </td>
             </tr>
         </div>
@@ -161,6 +161,19 @@
                         this.$message.error("系统繁忙");
                     }
                 })
+            },
+            loveMusic(val){
+              console.log(val)
+              axios.get('/lovemusic/likemusic/'+val)
+                  .then(resp=>{
+                      if (resp.data.code == 20011){
+                          this.$message.success("收藏成功");
+                      }else if (esp.data.code == 20010){
+                          this.$message.error(resp.data.msg);
+                      }else {
+                          this.$message.error("系统繁忙");
+                      }
+                  })
             }
         },
         mounted(){
