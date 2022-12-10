@@ -36,14 +36,21 @@ public class MusicController {
     @Value("${music.path}")
     private String savePath;
 
+    /**
+     * 上传音乐
+     * @param singer 歌手名
+     * @param file 上传文件
+     * @param request
+     * @param response
+     * @return
+     */
     @PostMapping("/upload")
     public Result upload(@RequestParam String singer, @RequestParam("file") MultipartFile file,
                          HttpServletRequest request, HttpServletResponse response) {
 
-
+        //getSession(false) 获取session 如果不存在不创建
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute(Code.SESSION_OK) == null) {
-            //System.out.println("没有登录");
             return new Result(null,null,"请先登录");
         }
 
@@ -51,7 +58,7 @@ public class MusicController {
         //System.out.println(savePath);D:/Java/Music/
 
         String fileNameAndType = file.getOriginalFilename();//获取文件名
-        System.out.println("fileNameAndType: "+fileNameAndType);
+        //System.out.println("fileNameAndType: "+fileNameAndType);
 
         String path =savePath+fileNameAndType;
 
@@ -63,10 +70,16 @@ public class MusicController {
         // 获取文件的后缀名
         String suffixName = fileNameAndType.substring(fileNameAndType.lastIndexOf("."));
         //System.out.println(suffixName);
-        if (!suffixName.equals(".mp3")) return new Result(Code.UPDATE_ERR,null,"不是mp3文件");
+        //if (!suffixName.equals(".mp3")) return new Result(Code.UPDATE_ERR,null,"不是mp3文件");
+        //忽略大小写
+        if (!suffixName.equalsIgnoreCase(".mp3")) return new Result(Code.UPDATE_ERR,null,"不是mp3文件");
         try {
+            /*
+             * @Date: 2022/12/10 12:36
+             * file 上传文件
+             * 将上传文件存到 dest
+             */
             file.transferTo(dest);
-
         } catch (IOException e) {
             e.printStackTrace();
             return new Result(Code.UPDATE_ERR,null,"上传失败");
@@ -74,13 +87,16 @@ public class MusicController {
 
         //数据库插入数据
         //获取歌曲名字
+        //lastIndexOf('.') 获取. 最后出现的下标
+        //你在哪.mp3   lastIndexOf('.') = 3 substring(a,b) [a,b) 你在哪
         String title = fileNameAndType.substring(0,fileNameAndType.lastIndexOf('.'));
+        //获取上传用户的id
         User user = (User)session.getAttribute(Code.SESSION_OK);
         int userid = user.getId();
 
         //点击播放音乐 发送的请求路径
         String url = "/music/get?path="+title+".mp3";
-
+        //获取上传时间
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
         String time = sf.format(new Date());
         try {
@@ -108,6 +124,14 @@ public class MusicController {
         }
 
     }
+
+    /**
+     * 查询音乐
+     * 没有参数就是查询全部
+     * 有参数就根据参数模糊查询
+     * @param musicName
+     * @return
+     */
     @GetMapping("/selectMusic")//(required=false)可以不传入参数
     public Result findMusic(@RequestParam(required = false) String musicName){
         List<Music> musicList = null;
@@ -120,8 +144,8 @@ public class MusicController {
         return new Result(Code.GET_OK,musicList,"查询到了所有的音乐");
     }
     /**
+     * 处理播放音乐的请求
      * 播放音乐的时候,/music/get?path=xxx.mp3
-     *
      * @param path
      * @return
      */
@@ -142,6 +166,11 @@ public class MusicController {
         return ResponseEntity.badRequest().build();
     }
 
+    /**
+     * 根据id删除
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     public Result deleteMusicById(@PathVariable Integer id){
         Music music = musicService.selectById(id);

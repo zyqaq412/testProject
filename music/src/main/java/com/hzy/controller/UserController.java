@@ -22,6 +22,16 @@ import javax.servlet.http.HttpSession;
 public class UserController {
     @Autowired
     UserService userService;
+
+    /**
+     * 登录
+     * 将前端传来的username password 封装为user对象
+     * userIsCunZai(username) ：先查询是否存在
+     * login(user) ：再验证用户名密码是否匹配
+     * @param user
+     * @param request
+     * @return
+     */
     @PostMapping("login")
     public Result login(@RequestBody User user, HttpServletRequest request){
         //System.out.println(user);
@@ -40,6 +50,14 @@ public class UserController {
             return new Result(Code.LOGIN_ERR,null,"登录失败，用户不存在！");
         }
     }
+
+    /**
+     * 注册
+     * userIsCunZai(username)：先看注册用户名是否存在
+     * 不存在的情况下 进行注册
+     * @param user
+     * @return
+     */
     @PostMapping
     public Result register (@RequestBody User user){
         System.out.println(user);
