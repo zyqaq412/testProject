@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<!-- 网页使用的语言 -->
+<html lang="zh-CN">
+<head>
+  <!-- 指定字符集 -->
+  <meta charset="utf-8">
+  <!-- 使用Edge最新的浏览器的渲染方式 -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <!-- viewport视口：网页可以根据设置的宽度自动进行适配，在浏览器的内部虚拟一个容器，容器的宽度与设备的宽度相同。
+  width: 默认宽度与设备的宽度相同
+  initial-scale: 初始的缩放比，为1:1 -->
+  <!--    <meta name="viewport" content="width=device-width, initial-scale=1">-->
+  <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+  <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+
+  <title>在线音乐平台</title>
+  <link rel="stylesheet" href="css/hhh.css">
+
+  <link rel="shortcut icon" href="#" />
+
+  <!-- 1. 导入CSS的全局样式 -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <script src="js/vue.js"></script>
+  <script src="js/axios.js"></script>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <!-- 引入组件库 -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <style type="text/css">
+    td, th {
+      text-align: center;
+    }
+  </style>
+
+  <style>
+    /* 设置整体页面高度 */
+    html, body {
+      height: 100%;
+      opacity: 0.9;
+      background-image: url(img/cat3.jpg);
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+  </style>
+</head>
+
+<body id="body">
+
+
+<div id="app" class="container">
+  <h3  style="text-align: center">喜欢音乐列表</h3>
+
+  <div style="float: right;margin-bottom: 15px">
+    <a class="btn btn-primary" href="list.html">回到首页</a>
+    <!--<a id="delete" class="btn btn-primary">删除选中</a>-->
+  </div>
+  <table border="1" class="table table-bordered table-hover">
+
+    <div>
+      <tr class="success">
+        <!--<th>选择</th>-->
+        <th>歌名</th>
+        <th>歌手</th>
+        <th>歌曲</th>
+        <th>操作</th>
+      </tr>
+    </div>
+
+    <div>
+      <tr v-for="music in musicList">
+        <!--<th><input id="1" type="checkbox"></th>-->
+        <td>{{music.title}}</td>
+        <td>{{music.singer}}</td>
+        <td><button class="btn btn-primary" @click="playerSong(music.url)">播放歌曲</button></td>
+        <td><button class="btn btn-primary" @click="deleteById(music.id)">删除</button></td>
+      </tr>
+    </div>
+    </tbody>
+  </table>
+</div>
+</body>
+
+<div style="width: 300px; height: 140px; position:absolute; bottom:10px; right:10px">
+  <script type="text/javascript" src="player/sewise.player.min.js"></script>
+  <script type="text/javascript">
+    SewisePlayer.setup({
+      server: "vod",
+      type: "mp3",
+      //这里是默认的一个网址
+      videourl:"http://jackzhang1204.github.io/materials/where_did_time_go.mp3",
+      skin: "vodWhite",
+      //这里需要设置false
+      autostart:"false",
+    });
+  </script>
+</div>
+<script type="text/javascript">
+
+  new Vue({
+    el:'#app',
+    data:{
+      musicList:[{
+        id:'',
+        title:'成都',
+        singer:'赵雷',
+        time:'',
+        url:'',
+        userid:''
+      }],
+      selectMusicName:''
+    },
+    methods:{
+      selectMusic(){
+        axios({
+          method:"post",
+          url:"/lovemusic/selectMusic",
+        }).then(resp=>{
+
+          if(resp.data.code == 20041){
+            this.musicList = resp.data.data;
+          }else if (resp.data.code == 20040){
+            this.$message.error(resp.data.msg);
+          }else {
+            this.$message.error("系统繁忙");
+          }
+
+        })
+      },
+      //播放
+      playerSong(val) {
+        console.log(val)
+        var name = val.substring(val.lastIndexOf('=')+1);
+        console.log(name)
+        //obj:播放地址 name: 名字 0: 开始时间 true: 自动播放
+        SewisePlayer.toPlay(val,name,0,true);
+      },
+      deleteById(val){
+
+        axios({
+          method: "delete",
+          url:"/lovemusic/"+val
+        }).then(resp=>{
+          if (resp.data.code == 20021){
+            this.$message.success("删除成功");
+            this.selectMusic();
+          }else if(resp.data.code == 20020){
+            this.$message.error(resp.data.msg);
+          }else {
+            this.$message.error("系统繁忙");
+          }
+        })
+      }
+    },
+    mounted(){
+      this.selectMusic();
+    }
+  })
+</script>
+
+</html>
