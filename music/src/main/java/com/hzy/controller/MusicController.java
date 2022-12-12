@@ -95,7 +95,7 @@ public class MusicController {
         int userid = user.getId();
 
         //点击播放音乐 发送的请求路径
-        String url = "/music/get?path="+title+".mp3";
+        String url = "/music/get?path="+title+suffixName;
         //获取上传时间
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
         String time = sf.format(new Date());
